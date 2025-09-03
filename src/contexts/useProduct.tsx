@@ -43,7 +43,10 @@ const ProductContext = createContext<ProductContextType>({
   search: "",
   setSearch: () => {},
 });
-
+// const ProductContext = createContext<ProductContextType | undefined>(undefined);
+// if (ProductContext === undefined) {
+//   throw new Error(" Error from product contex");
+// }
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {

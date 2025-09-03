@@ -1,4 +1,5 @@
 import "./App.css";
+import { ProductProvider } from "./contexts/useProduct";
 import RouteNavigation from "./routes/routes";
 // import ProductForm from "./components/ProductForm";
 // import { ProductProvider } from "./contexts/useProduct";
@@ -6,9 +7,9 @@ import RouteNavigation from "./routes/routes";
 
 function App() {
   return (
-    <div>
+    <ProductProvider>
       <RouteNavigation />
-    </div>
+    </ProductProvider>
   );
 }
 
