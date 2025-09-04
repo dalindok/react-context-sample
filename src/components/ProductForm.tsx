@@ -1,51 +1,55 @@
 import type { ProductI } from "../types/ProductI";
 import { v4 as uuidv4 } from "uuid";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import { useProduct } from "../contexts/useProduct";
+import { useEffect, useState } from "react";
 
 const ProductForm = () => {
-  const {
-    editingId,
-    setEditingId,
-    name,
-    setName,
-    description,
-    setDescription,
-    image,
-    setImage,
-    price,
-    setPrice,
-    updateProduct,
-    createProduct,
-  } = useProduct();
+  const { id } = useParams();
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [image, setImage] = useState("");
+  const [price, setPrice] = useState<number | string>("");
+  const { products, updateProduct, createProduct } = useProduct();
 
+  const editingProduct = id
+    ? products.find((p) => p.id.toString() === id)
+    : null;
+  // console.log("editingProduct", editingProduct);
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // if (!ProductContext) return;
 
     const newProduct: ProductI = {
       // if editing ID is null it will generate new ID by uuidv4
-      id: editingId ?? uuidv4(),
+      id: editingProduct?.id ?? uuidv4(),
       name: name,
       description: description,
       image: image,
       price: price ?? "",
     };
-
-    if (editingId) {
-      updateProduct(editingId, newProduct);
-      setEditingId(null);
-      console.log("editingid", newProduct);
-      console.log("setEditingId", setEditingId);
+    if (editingProduct) {
+      // update existing product
+      updateProduct(editingProduct.id, newProduct);
     } else {
+      // create new product
       createProduct(newProduct);
-      // console.log("new Product", newProduct);
     }
     navigate(-1);
   };
   const navigate = useNavigate();
 
+  // effect runs whenever editingProduct changes.
+  useEffect(() => {
+    console.log("useEffect is running", editingProduct);
+    if (editingProduct) {
+      setName(editingProduct.name);
+      setDescription(editingProduct.description);
+      setPrice(editingProduct.price);
+      setImage(editingProduct.image);
+    }
+  }, [editingProduct]);
   const handleChangeFile: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     // select oly the first uploaded file otherwise null
     const file = e.target.files?.[0];
@@ -59,7 +63,9 @@ const ProductForm = () => {
     <div className="flex flex-row items-center justify-center h-screen ">
       <div className="p-6 rounded-xl w-1/3 border-1">
         <div className="flex flex-row justify-between">
-          <p className="text-xl font-medium">Add new product</p>
+          <p className="text-xl font-medium">
+            {editingProduct !== null ? "Update Product" : "Add New Product"}
+          </p>
           <IoClose onClick={() => navigate(-1)} size={26} />
         </div>
         <form onSubmit={onSubmit}>
@@ -77,7 +83,6 @@ const ProductForm = () => {
             <div className="flex flex-row justify-center gap-2 items-center">
               <p className="mt-4">Description:</p>
               <input
-                required
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Description"
@@ -99,7 +104,6 @@ const ProductForm = () => {
               <p className="mt-4">Image:</p>
               <div>
                 <input
-                  required
                   type="file"
                   onChange={(e) => {
                     setImage(e.target.value);
@@ -109,7 +113,7 @@ const ProductForm = () => {
                   className="border-1 border-slate-300 py-1 px-2 rounded-lg mt-4"
                   accept="image/*"
                 />
-                <img src={image} alt="" />
+                {/* <img src={image} alt="" /> */}
               </div>
             </div>
           </div>
@@ -119,7 +123,7 @@ const ProductForm = () => {
               type="submit"
               className="bg-yellow-300 py-1 px-10 rounded-lg "
             >
-              {editingId !== null ? "Update" : "Add"}
+              {editingProduct !== null ? "Update" : "Add"}
             </button>
           </div>
         </form>

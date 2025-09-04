@@ -1,23 +1,11 @@
 import type { ProductI } from "../types/ProductI";
-import { useProduct } from "../contexts/useProduct";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
-  // product prop of a product
   product: ProductI;
 }
 
 export const ProductItem: React.FC<Props> = ({ product }) => {
-  const {
-    setEditingId,
-    setName,
-    setDescription,
-    setImage,
-    setPrice,
-    products,
-  } = useProduct();
-
-  // delete function call from context
   const deleteProduct = () => {
     deleteProduct();
   };
@@ -31,26 +19,16 @@ export const ProductItem: React.FC<Props> = ({ product }) => {
       />
 
       <div className="my-2">
-        <p className="text-lg font-medium">{product.name}</p>
-        <p className="font-light">{product.description}</p>
-        <p>Price: ${product.price}</p>
+        <p className="">Name: {product.name}</p>
+
+        <p className="font-light">Description: {product.description}</p>
+        <div className="flex flex-row items-center gap-2">
+          <p>Price: ${product.price}</p>
+        </div>
       </div>
       <div className="flex flex-row justify-between items-center">
         <button
-          onClick={() => {
-            const findObj = products.find(
-              (item: any) => item.id === product.id
-            );
-            if (findObj) {
-              setName(findObj?.name);
-              setDescription(findObj?.description);
-              setPrice(findObj?.price);
-              setImage(findObj?.image);
-            }
-
-            setEditingId(product.id);
-            navigate("/addproduct");
-          }}
+          onClick={() => navigate(`/updateproduct/${product.id}`)}
           className="bg-yellow-300 py-1 px-10 rounded-lg "
         >
           Edit

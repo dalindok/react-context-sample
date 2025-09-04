@@ -8,16 +8,6 @@ interface ProductContextType {
   createProduct: (products: ProductI) => void;
   deleteProduct: (id: string) => void;
   updateProduct: (id: string, updatedProduct: ProductI) => void;
-  name: string;
-  setName: React.Dispatch<React.SetStateAction<string>>;
-  description: string;
-  setDescription: React.Dispatch<React.SetStateAction<string>>;
-  image: string;
-  setImage: React.Dispatch<React.SetStateAction<string>>;
-  price: string | number;
-  setPrice: React.Dispatch<React.SetStateAction<string | number>>;
-  editingId: string | null;
-  setEditingId: React.Dispatch<React.SetStateAction<string | null>>;
   searchProduct: ProductI[];
   search: string;
   setSearch: React.Dispatch<React.SetStateAction<string>>;
@@ -29,36 +19,17 @@ const ProductContext = createContext<ProductContextType>({
   createProduct: () => {},
   deleteProduct: () => {},
   updateProduct: () => {},
-  name: "",
-  setName: () => {},
-  description: "",
-  setDescription: () => {},
-  image: "",
-  setImage: () => {},
-  price: 0,
-  setPrice: () => {},
-  editingId: null,
-  setEditingId: () => {},
   searchProduct: [],
   search: "",
   setSearch: () => {},
 });
-// const ProductContext = createContext<ProductContextType | undefined>(undefined);
-// if (ProductContext === undefined) {
-//   throw new Error(" Error from product contex");
-// }
+
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [products, setProducts] = useState<ProductI[]>([]);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
-  const [price, setPrice] = useState<number | string>("");
   const [search, setSearch] = useState("");
 
-  const [editingId, setEditingId] = useState<string | null>(null);
-  // console.log("editing ID", editingId);
   const createProduct = (product: ProductI) => {
     setProducts((prev) => [...prev, product]);
   };
@@ -85,16 +56,6 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
         createProduct,
         deleteProduct,
         updateProduct,
-        name,
-        setName,
-        description,
-        setDescription,
-        image,
-        setImage,
-        price,
-        setPrice,
-        editingId,
-        setEditingId,
         searchProduct,
         search,
         setSearch,

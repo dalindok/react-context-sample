@@ -10,6 +10,7 @@ const RouteNavigation = () => {
       <Route path="/" element={<HomePage />} />
 
       <Route path="/addproduct" element={<ProductForm />} />
+      <Route path="/updateproduct/:id" element={<ProductForm />} />
     </Routes>
   );
 };
