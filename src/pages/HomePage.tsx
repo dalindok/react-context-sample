@@ -1,9 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { ListProduct } from "../components/ListProduct";
+// import { useEffect } from "react";
+// import { useProduct } from "../contexts/useProduct";
 
 const HomePage = () => {
+  // const {products, setProducts} = useProduct()
+
   const navigate = useNavigate();
+
   return (
     <div className=" m-6">
       <div className="flex flex-row justify-between">
@@ -14,7 +19,7 @@ const HomePage = () => {
           }}
           className="bg-yellow-300 py-1 px-10 rounded-lg "
         >
-          Add Product
+          Add new product
         </button>
       </div>
       <div className="flex flex-col items-center my-4">

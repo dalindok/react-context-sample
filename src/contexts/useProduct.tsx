@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { ProductI } from "../types/ProductI";
+import { useSearchParams } from "react-router-dom";
 
 interface ProductContextType {
   products: ProductI[];
@@ -9,8 +10,6 @@ interface ProductContextType {
   deleteProduct: (id: string) => void;
   updateProduct: (id: string, updatedProduct: ProductI) => void;
   searchProduct: ProductI[];
-  search: string;
-  setSearch: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const ProductContext = createContext<ProductContextType>({
@@ -20,15 +19,32 @@ const ProductContext = createContext<ProductContextType>({
   deleteProduct: () => {},
   updateProduct: () => {},
   searchProduct: [],
-  search: "",
-  setSearch: () => {},
 });
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [products, setProducts] = useState<ProductI[]>([]);
-  const [search, setSearch] = useState("");
+  // const [products, setProducts] = useState<ProductI[]>([]);
+  const [products, setProducts] = useState<ProductI[]>(() => {
+    // Converts a JSON string back into a JavaScript object/array.
+    const stored = localStorage.getItem("products");
+    //  const stored = sessionStorage.getItem("products");
+    return stored ? JSON.parse(stored) : [];
+  });
+
+  useEffect(() => {
+    // add a key and a value to localStorage.
+    localStorage.setItem("products", JSON.stringify(products));
+    // sessionStorage.setItem("products", JSON.stringify(products));
+  }, [products]);
+
+  // useEffect(() => {
+  //   const stored = localStorage.getItem("products");
+  //   console.log("stored", stored);
+  //   if (stored) {
+  //     setProducts(JSON.parse(stored));
+  //   }
+  // }, []);
 
   const createProduct = (product: ProductI) => {
     setProducts((prev) => [...prev, product]);
@@ -44,8 +60,11 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
     );
   };
 
+  const [searchParam] = useSearchParams();
+  const getSearchParams = searchParam.get("search") || "";
+
   const searchProduct = products.filter((p) =>
-    p.name.toLowerCase().includes(search)
+    p.name.toLowerCase().includes(getSearchParams)
   );
 
   return (
@@ -57,8 +76,6 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({
         deleteProduct,
         updateProduct,
         searchProduct,
-        search,
-        setSearch,
       }}
     >
       {children}

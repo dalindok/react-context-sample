@@ -1,3 +1,4 @@
+import { useProduct } from "../contexts/useProduct";
 import type { ProductI } from "../types/ProductI";
 import { useNavigate } from "react-router-dom";
 
@@ -6,16 +7,18 @@ interface Props {
 }
 
 export const ProductItem: React.FC<Props> = ({ product }) => {
-  const deleteProduct = () => {
-    deleteProduct();
-  };
+  const { deleteProduct } = useProduct();
+
+  // const deleteProduct = () => {
+  //   deleteProduct();
+  // };
   const navigate = useNavigate();
   return (
     <div className="p-2 m-2 rounded-md bg-white w-fit">
       <img
         src={product.image}
         alt="Product Image"
-        className="w-[200px] h-[250px]"
+        className="w-[250px] h-[250px]"
       />
 
       <div className="my-2">
@@ -38,7 +41,7 @@ export const ProductItem: React.FC<Props> = ({ product }) => {
             if (
               window.confirm("Are you sure you want to delete this product?")
             ) {
-              deleteProduct();
+              deleteProduct(product.id);
             }
           }}
           className="bg-red-500 py-1 px-4 rounded-lg"
