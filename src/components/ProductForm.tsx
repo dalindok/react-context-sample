@@ -73,7 +73,7 @@ const ProductForm = () => {
             rules={{
               required: "* Name is required",
               maxLength: {
-                value: 10,
+                value: 20,
                 message: "Name cannot exceed 10 characters",
               },
             }}
